@@ -10,7 +10,8 @@ echo "Setting up ssl cert valid for 10 years... (enter IP address for Common Nam
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 3650 -nodes
 
 echo "Setting up autostart..."
-sudo ln -s /home/pi/MiniSplitPi/MiniSplitPi.sh /etc/init.d/MiniSplitPi.sh
+sed -i "s|{{splitpipath}}|`pwd`|g" MiniSplitPi.sh
+sudo ln -s ./MiniSplitPi.sh /etc/init.d/MiniSplitPi.sh
 sudo update-rc.d MiniSplitPi.sh defaults
 
 echo "Starting..."

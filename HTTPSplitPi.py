@@ -17,16 +17,15 @@
 #   401 Unauthorized if invalid UUID
 #   200 {"action": "received"} if action request
 #   200 {...} status info if no action requested
-
-import sys
+import os
 import ssl
 import json
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 
-from mitsi import HeatPump
-from mitsi_lookup import (FAN, MODE, POWER, TEMP, VANE)
+from MiniSplitPi.mitsi import HeatPump
+from MiniSplitPi.mitsi_lookup import (FAN, MODE, POWER, TEMP, VANE)
 
 from time import sleep, time
 from gpiozero import CPUTemperature, LED, Button
@@ -40,7 +39,7 @@ redled = LED(17)
 onoff = Button(3)
 
 # Base dir for uuid and cert/key files
-basedir = '/home/pi/MiniSplitPi/'
+basedir = os.getcwd()
 
 # Heat Pump device
 hpdev = '/dev/ttyAMA0'

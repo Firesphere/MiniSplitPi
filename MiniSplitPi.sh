@@ -1,7 +1,7 @@
 #! /bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          MiniSplitPi.py
+# Provides:          HTTPSplitPi.py
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -14,11 +14,11 @@
 case "$1" in
   start)
     echo "Starting MiniSplitPi.py"
-    /home/pi/MiniSplitPi/MiniSplitPi.py &
+    {{splitpipath}}/HTTPSplitPi.py &
     ;;
   stop)
     echo "Stopping MiniSplitPi.py"
-    pkill -f /home/pi/MiniSplitPi/MiniSplitPi.py
+    pkill -f {{splitpipath}}/HTTPSplitPi.py
     ;;
   *)
     echo "Usage: /etc/init.d/MiniSplitPi.sh {start|stop}"
