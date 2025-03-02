@@ -1,7 +1,7 @@
 #! /bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          HTTPSplitPi.py
+# Provides:          MitsiQTT.py
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -13,15 +13,15 @@
 # Carry out specific functions when asked to by the system
 case "$1" in
   start)
-    echo "Starting MiniSplitPi.py"
-    {{splitpipath}}/HTTPSplitPi.py &
+    echo "Starting Mitsi QTT"
+    {{splitpipath}}/MitsiQTT.py &
     ;;
   stop)
-    echo "Stopping MiniSplitPi.py"
-    pkill -f {{splitpipath}}/HTTPSplitPi.py
+    echo "Stopping Mitsi QTT"
+    pkill -f {{splitpipath}}/MitsiQTT.py
     ;;
   *)
-    echo "Usage: /etc/init.d/MiniSplitPi.sh {start|stop}"
+    echo "Usage: /etc/init.d/mitsiqtt.sh {start|stop}"
     exit 1
     ;;
 esac

@@ -7,7 +7,7 @@ from copy import copy
 
 import serial
 
-from mitsi_lookup import (
+from Mitsi.MitsiLookup import (
     CONTROL_PACKET_POSITIONS,
     CONTROL_PACKET_VALUES,
     DIR,
@@ -28,6 +28,7 @@ class HeatPump(object):
     reported_attributes = ("power", "mode", "temp", "fan", "vane", "dir", "room_temp")
 
     def __init__(self, port=None, **kwargs):
+        self.ser = None
         self.port = port
         for item in self.reported_attributes:
             setattr(self, item, kwargs.get(item, None))
@@ -78,11 +79,12 @@ class HeatPump(object):
 
     def connect(self):
         """ Establish a serial connection to self.port. """
-        if self.port:
-            self.ser = serial.Serial(
-                self.port, 2400, parity=serial.PARITY_EVEN, timeout=0
-            )
-            self.ser.write(bytearray(self.start_packet.bytes))
+        if not self.port:
+            return
+        self.ser = serial.Serial(
+            self.port, 2400, parity=serial.PARITY_EVEN, timeout=0
+        )
+        self.ser.write(bytearray(self.start_packet.bytes))
 
     def map_set_packet_to_attributes(self):
         """ Match data in a Packet() to the relevant HeatPump() attribute. """
@@ -139,9 +141,9 @@ class HeatPump(object):
                         log.debug("Temp Packet: %s" % self.room_temp)
 
                     if (
-                        self.current_packet.data[0] in self.packet_history
-                        and self.current_packet
-                        == self.packet_history[self.current_packet.data[0]]
+                            self.current_packet.data[0] in self.packet_history
+                            and self.current_packet
+                            == self.packet_history[self.current_packet.data[0]]
                     ):
                         pass
                     else:
@@ -256,8 +258,8 @@ class Packet(object):
     @property
     def complete(self):
         if (
-            self.data_len is not None
-            and len(self.bytes) == HEADER_LEN + self.data_len + 1
+                self.data_len is not None
+                and len(self.bytes) == HEADER_LEN + self.data_len + 1
         ):
             return True
         return False
