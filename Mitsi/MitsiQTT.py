@@ -14,7 +14,7 @@ from Mitsi.State import State
 
 class MitsiQTT:
     running = False
-    topic = 'mitsi'
+    topic = 'homeassistant/mitsi'
     host = 'localhost'
     username = ''
     password = ''
@@ -80,7 +80,7 @@ class MitsiQTT:
                     self.talk("connected", 2, qos=1, retain=True)
                     self.connected_state = 2
                 self.state.update(self.hp.to_dict())
-                self.talk("state", self.state.json_state(), retain=True)
+                self.talk("state", json.dumps(self.state.reverse_state()), retain=True)
                 self.hp.dirty = False
             if self.client.loop() != 0:
                 self.logger.warning("Disonnected from MQTT broker: %s", self.host)
@@ -111,8 +111,8 @@ class MitsiQTT:
             if topic == "state":
                 state = 'Unknown'  # Fallback for the logger error
                 try:
-                    state = json.loads(msg.payload.decode('utf-8'))
-                    self.hp.set(state)
+                    self.state.update(json.loads(msg.payload.decode('utf-8')))
+                    self.hp.set(self.state.reverse_state())
                 except ValueError:
                     self.logger.warning("Invalid JSON: %s" % msg.payload)
                 except Exception:

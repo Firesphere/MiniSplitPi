@@ -57,7 +57,18 @@ class State:
         return json.dumps(self.state())
 
     def state(self):
-        return self.state
+        return self._state
+
+    def reverse_state(self):
+        return {
+                'power': lookup.POWER.lookup(self._state['power']),
+                'temp': lookup.TEMP.lookup(self._state['temp']),
+                'room_temp': lookup.ROOM_TEMP.lookup(self._state['room_temp']),
+                'vane': lookup.VANE.lookup(self._state['vane']),
+                'mode': lookup.MODE.lookup(self._state['mode']),
+                'fan': lookup.FAN.lookup(self._state['fan']),
+                'dir': lookup.DIR.lookup(self._state['dir']),
+            }
 
     @staticmethod
     def round_to_half(number):

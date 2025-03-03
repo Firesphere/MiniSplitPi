@@ -26,19 +26,26 @@ log = logging.getLogger(__name__)
 
 class HeatPump(object):
     reported_attributes = ("power", "mode", "temp", "fan", "vane", "dir", "room_temp")
+    ser = None
+    power = None
+    mode = MODE['AUTO']
+    fan = FAN['AUTO']
+    vane = VANE['AUTO']
+    dir = DIR['|']
+    temp = None
+    port = '/dev/ttyAMA0'
+    dirty = True
+    room_temp = None
+    info_packet_index = 0
+    last_send = 0
+    current_packet = None
+    packet_history = {}
+    wanted_state = {}
 
     def __init__(self, port=None, **kwargs):
-        self.ser = None
         self.port = port
         for item in self.reported_attributes:
             setattr(self, item, kwargs.get(item, None))
-        self.dirty = True
-        self.room_temp = None
-        self.info_packet_index = 0
-        self.last_send = 0
-        self.current_packet = None
-        self.packet_history = {}
-        self.wanted_state = {}
         self.start_packet = Packet.build(0x5A, [0xCA, 0x01])
         self.info_packets = [
             Packet.build(0x42, [0x02] + [0x00] * 0x0F),
