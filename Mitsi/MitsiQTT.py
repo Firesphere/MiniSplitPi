@@ -107,13 +107,12 @@ class MitsiQTT:
         if self.topic:
             topic = topic.partition("%s/" % self.topic)[2]
         msg_type, s, topic = topic.split("/")
-        if msg_type == "command":
-            if topic == "state":
-                state = 'Unknown'  # Fallback for the logger error
-                try:
-                    self.state.update(json.loads(msg.payload.decode('utf-8')))
-                    self.hp.set(self.state.reverse_state())
-                except ValueError:
-                    self.logger.warning("Invalid JSON: %s" % msg.payload)
-                except Exception:
-                    self.logger.error("Failed to set state %s" % json.dumps(state))
+        if msg_type == "command" and topic == "state":
+            state = 'Unknown'  # Fallback for the logger error
+            try:
+                self.state.update(json.loads(msg.payload.decode('utf-8')))
+                self.hp.set(self.state.reverse_state())
+            except ValueError:
+                self.logger.warning("Invalid JSON: %s" % msg.payload)
+            except Exception:
+                self.logger.error("Failed to set state %s" % json.dumps(state))

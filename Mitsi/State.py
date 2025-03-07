@@ -21,6 +21,27 @@ class State:
         'dir': lookup.DIR['|']
     }
 
+    def __init__(self, state=None):
+        if state is not None:
+            self.update(state)
+
+    def json_state(self):
+        return json.dumps(self.state())
+
+    def state(self):
+        return self._state
+
+    def reverse_state(self):
+        return {
+            'power': lookup.POWER.lookup(self._state['power']),
+            'temp': lookup.TEMP.lookup(self._state['temp']),
+            'room_temp': lookup.ROOM_TEMP.lookup(self._state['room_temp']),
+            'vane': lookup.VANE.lookup(self._state['vane']),
+            'mode': lookup.MODE.lookup(self._state['mode']),
+            'fan': lookup.FAN.lookup(self._state['fan']),
+            'dir': lookup.DIR.lookup(self._state['dir']),
+        }
+
     def update(self, state):
         """
         Save the state to the State.state state :-D
@@ -31,19 +52,19 @@ class State:
         if not isinstance(dict, state):
             state = json.loads(state)
         for key, value in state:
+            if key == 'temp':
+                value = self.round_to_half(value)
             if self.validate(key, value):
                 self._state[key.tolower()] = value
 
-    def validate(self, key, value):
+    @staticmethod
+    def validate(key, value):
         """
-
         :param key: key of the state
         :param value: value to validate against
         :return: boolean
         """
         key = key.tolower()
-        if key == 'temp':
-            value = self.round_to_half(value)
         if (key == 'power' and value in lookup.POWER) or (
                 key == 'mode' and value in lookup.MODE) or (
                 key == 'vane' and value in lookup.VANE) or (
@@ -52,23 +73,6 @@ class State:
                 key == 'temp' and Decimal(value) in lookup.TEMP):
             return True
         return False
-
-    def json_state(self):
-        return json.dumps(self.state())
-
-    def state(self):
-        return self._state
-
-    def reverse_state(self):
-        return {
-                'power': lookup.POWER.lookup(self._state['power']),
-                'temp': lookup.TEMP.lookup(self._state['temp']),
-                'room_temp': lookup.ROOM_TEMP.lookup(self._state['room_temp']),
-                'vane': lookup.VANE.lookup(self._state['vane']),
-                'mode': lookup.MODE.lookup(self._state['mode']),
-                'fan': lookup.FAN.lookup(self._state['fan']),
-                'dir': lookup.DIR.lookup(self._state['dir']),
-            }
 
     @staticmethod
     def round_to_half(number):
