@@ -1,0 +1,20 @@
+{
+  "name": "{{ name }}",
+  "~": "{{ topic }}",
+  "state_topic": "~/state",
+  "payload_available": "online",
+  "payload_not_available": "offline",
+  "icon": "mdi:heat-pump",
+  "json_attributes_topic": "~/state",
+  "json_attributes_template": "{% raw %}{{ value_json | tojson }}{% endraw %}",
+  "availability_topic": "~/status",
+  "device_class": "timestamp",
+  "value_template": "{% raw %}{{ value_json.timestamp }}{% endraw %}",
+  "device": {
+    "identifiers": [
+      "HP-{{ identifier }}"
+    ],
+    "manufacturer": "Mitusbishi",
+    "model": "{{ modelnumber }}"
+  }
+}

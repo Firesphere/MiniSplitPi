@@ -2,11 +2,13 @@ import json
 import logging
 import os
 import signal
+import subprocess
 import sys
 import time
 
 import dotenv
 import paho.mqtt.client as mqtt
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 from Mitsi.Mitsi import HeatPump
 from Mitsi.State import State
@@ -14,7 +16,8 @@ from Mitsi.State import State
 
 class MitsiQTT:
     running = False
-    topic = 'homeassistant/mitsi'
+    name = 'Mitsubishi Heatpump'
+    topic = 'home/mitsi'
     host = 'localhost'
     username = ''
     password = ''
@@ -22,16 +25,21 @@ class MitsiQTT:
     client = mqtt
     state = None
     logger = logging
+    identifier = ''
 
     def __init__(self, logger, **kwargs):
         signal.signal(signal.SIGINT, self.cleanup)
         signal.signal(signal.SIGTERM, self.cleanup)
         self._load_env()
+        self._load_jinja()
         self.running = True
         self.logger = logger
         self._setup_heatpump()
         self._setup_state(**kwargs)
         self._setup_client()
+
+    def announce(self):
+        hp_state = jinja2
 
     def _setup_heatpump(self):
         self.hp = HeatPump('/dev/ttyAMA0')
@@ -45,30 +53,41 @@ class MitsiQTT:
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, protocol=mqtt.MQTTv31)
         if self.username != '' or self.password != '':
             self.client.username_pw_set(self.username, self.password)
-        will_topic = "connected"
+        will_topic = "online"
         if self.topic:
             will_topic = "%s/%s" % (self.topic, will_topic)
-        self.client.will_set(will_topic, "0", qos=1, retain=True)
+        self.client.will_set(will_topic, True, qos=1, retain=True)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.connect(self.host, port=self.port)
-        self.on_publish("connected", 1, qos=1, retain=True)
-        self.connected_state = 1
-        self.client.subscribe("%s/command/#" % self.topic)
 
     def _load_env(self):
         env_path = os.path.join(os.getcwd(), '.env')
         dotenv.load_dotenv(dotenv_path=env_path)
+        self.identifier = os.getenv('DEVICE_ID')
+        if not self.identifier:
+            read_identifier = subprocess.run(["cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2"])
+            self.identifier = read_identifier
         self.host = os.getenv("MQTT_HOST", 'localhost')
         self.port = int(os.getenv("MQTT_PORT", 1883))
         self.username = os.getenv("MQTT_USER", '')
         self.password = os.getenv("MQTT_PASS", '')
 
+    def _load_jinja(self, name=None):
+        if name is None:
+            name = "MitsiQTT"
+        jinja_env = Environment(
+            loader=PackageLoader(name),
+            autoescape=select_autoescape()
+        )
+        self.command_tpl = jinja_env.get_template("commands.json")
+        self.state_tpl = jinja_env.get_template("state.json")
+
     def on_connect(self, client, userdata, flags, rc, properties):
         if rc.is_failure:
             raise Exception("Connectivity to MQTT broker failed")
         self.logger.info("Connected to MQTT broker: %s", self.host)
-        self.on_publish("connected", 1, qos=1, retain=True)
+        self.on_publish("online", 1, qos=1, retain=True)
         self.connected_state = 1
         self.client.subscribe("%s/command/#" % self.topic)
         self.hp.connect()

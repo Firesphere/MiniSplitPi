@@ -1,0 +1,261 @@
+[
+  {
+    "info": {
+      "timestamp": "2025-03-10T18:35:27+13:00",
+      "rpi_model": "RPi 4 Model B r1.4",
+      "ifaces": "e,w,b",
+      "host_name": "EventHorizon",
+      "fqdn": "EventHorizon",
+      "ux_release": "bookworm",
+      "ux_version": "6.6.74+rpt-rpi-v8",
+      "ux_updates": 0,
+      "up_time": "2 days,   8:04",
+      "up_time_secs": 201840,
+      "last_update": "2025-03-10T17:16:49+13:00",
+      "fs_total_gb": 32,
+      "fs_free_prcnt": 50,
+      "fs_used_prcnt": 50,
+      "networking": {
+        "eth0": {
+          "IP": "192.168.178.45",
+          "mac": "e4:5f:01:7c:8f:f3",
+          "rx_data": 34806770,
+          "tx_data": 26210607
+        },
+        "wlan0": {
+          "IP": "192.168.178.46",
+          "mac": "e4:5f:01:7c:8f:f4",
+          "rx_data": 84780,
+          "tx_data": 529
+        }
+      },
+      "drives": {
+        "dev": {
+          "size_gb": 1,
+          "used_prcnt": 0,
+          "device": "udev",
+          "mount_pt": "/dev"
+        },
+        "root": {
+          "size_gb": 32,
+          "used_prcnt": 50,
+          "device": "/dev/mmcblk0p2",
+          "mount_pt": "/"
+        },
+        "snap-bandwhich-270": {
+          "size_gb": 0,
+          "used_prcnt": 100,
+          "device": "/dev/loop0",
+          "mount_pt": "/snap/bandwhich/270"
+        },
+        "snap-core-17201": {
+          "size_gb": 0,
+          "used_prcnt": 100,
+          "device": "/dev/loop1",
+          "mount_pt": "/snap/core/17201"
+        },
+        "snap-core22-1752": {
+          "size_gb": 0,
+          "used_prcnt": 100,
+          "device": "/dev/loop2",
+          "mount_pt": "/snap/core22/1752"
+        },
+        "media-external": {
+          "size_gb": 2048,
+          "used_prcnt": 29,
+          "device": "/dev/sda1",
+          "mount_pt": "/media/external"
+        },
+        "media-treestore": {
+          "size_gb": 1024,
+          "used_prcnt": 62,
+          "device": "//192.168.178.1/treestore/Seagate_Expansion_Drive",
+          "mount_pt": "/media/treestore"
+        }
+      },
+      "memory": {
+        "size_mb": 1897,
+        "free_mb": 752,
+        "size_swap": 2048,
+        "free_swap": 967
+      },
+      "mem_used_prcnt": 60,
+      "cpu": {
+        "hardware": "",
+        "model": "",
+        "number_cores": 4,
+        "bogo_mips": "432.00",
+        "serial": "100000006d79608f",
+        "load_1min_prcnt": 6.2,
+        "load_5min_prcnt": 5.8,
+        "load_15min_prcnt": 6.2
+      },
+      "throttle": [
+        "throttled = 0x0",
+        "Not throttled"
+      ],
+      "temperature_c": 66.2,
+      "temp_gpu_c": 66.2,
+      "temp_cpu_c": 66.7,
+      "reporter": "ISP-RPi-mqtt-daemon v1.9.x",
+      "reporter_releases": "v1.8.5,v1.7.2,v1.7.3,v1.7.4,v1.8.3,v1.8.4",
+      "report_interval": 5
+    }
+  },
+  {
+    "homeassistant/sensor/rpi-eventhorizon/monitor/config": {
+      "name": "Monitor",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_monitor",
+      "dev_cla": "timestamp",
+      "stat_t": "~/monitor",
+      "val_tpl": "{{ value_json.info.timestamp }}",
+      "~": "home/nodes/sensor/rpi-eventhorizon*",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:raspberry-pi",
+      "json_attr_t": "~/monitor",
+      "json_attr_tpl": "{{ value_json.info | tojson }}",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ],
+        "manufacturer": "Raspberry Pi (Trading) Ltd.",
+        "name": "RPi-EventHorizon",
+        "model": "RPi 4 Model B r1.4",
+        "sw_version": "bookworm 6.6.74+rpt-rpi-v8"
+      }
+    }
+  },
+  {
+    "homeassistant/sensor/rpi-eventhorizon/temperature/config": {
+      "name": "Temperature",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_temperature",
+      "dev_cla": "temperature",
+      "unit_of_measurement": "\u00b0C",
+      "stat_t": "~/monitor",
+      "val_tpl": "{{ value_json.info.temperature_c }}",
+      "~": "home/nodes/sensor/rpi-eventhorizon",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:thermometer",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  },
+  {
+    "homeassistant/sensor/rpi-eventhorizon/disk_used/config": {
+      "name": "Disk Used",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_disk_used",
+      "unit_of_measurement": "%",
+      "stat_t": "~/monitor",
+      "val_tpl": "{{ value_json.info.fs_used_prcnt }}",
+      "~": "home/nodes/sensor/rpi-eventhorizon",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:sd",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  },
+  {
+    "homeassistant/sensor/rpi-eventhorizon/cpu_load/config": {
+      "name": "Cpu Use",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_cpu_load",
+      "unit_of_measurement": "%",
+      "stat_t": "~/monitor",
+      "val_tpl": "{{ value_json.info.cpu.load_5min_prcnt }}",
+      "~": "home/nodes/sensor/rpi-eventhorizon",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:cpu-64-bit",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  },
+  {
+    "homeassistant/sensor/rpi-eventhorizon/mem_used/config": {
+      "name": "Memory Used",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_mem_used",
+      "unit_of_measurement": "%",
+      "stat_t": "~/monitor",
+      "val_tpl": "{{ value_json.info.mem_used_prcnt }}",
+      "~": "home/nodes/sensor/rpi-eventhorizon",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:memory",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  },
+  {
+    "homeassistant/button/rpi-eventhorizon/shutdown/config": {
+      "name": "Shutdown",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_shutdown",
+      "~": "home/nodes/command/rpi-eventhorizon",
+      "cmd_t": "~/shutdown",
+      "json_attr_t": "~/shutdown/attributes",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:power-sleep",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  },
+  {
+    "homeassistant/button/rpi-eventhorizon/reboot/config": {
+      "name": "Reboot",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_reboot",
+      "~": "home/nodes/command/rpi-eventhorizon",
+      "cmd_t": "~/reboot",
+      "json_attr_t": "~/reboot/attributes",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:restart",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  },
+  {
+    "homeassistant/button/rpi-eventhorizon/restart_service/config": {
+      "name": "Restart_Service",
+      "uniq_id": "RPi-e45f01Mon7c8ff3_restart_service",
+      "~": "home/nodes/command/rpi-eventhorizon",
+      "cmd_t": "~/restart_service",
+      "json_attr_t": "~/restart_service/attributes",
+      "avty_t": "~/status",
+      "pl_avail": "online",
+      "pl_not_avail": "offline",
+      "ic": "mdi:cog-counterclockwise",
+      "dev": {
+        "identifiers": [
+          "RPi-e45f01Mon7c8ff3"
+        ]
+      }
+    }
+  }
+]
